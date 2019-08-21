@@ -1,0 +1,27 @@
+{
+  "name": "parse-opentype",
+  "version": "0.0.1",
+  "description": "Parse OpenType fonts",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && mocha ./dist/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nrkn/parse-opentype.git"
+  },
+  "keywords": [],
+  "author": "Nik Coughlin <nrkn.com@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nrkn/parse-opentype/issues"
+  },
+  "homepage": "https://github.com/nrkn/parse-opentype#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.12",
+    "@types/mocha": "^5.2.7",
+    "mocha": "^5.2.0"
+  }
+}
