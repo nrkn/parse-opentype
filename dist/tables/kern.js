@@ -20,7 +20,7 @@ const parse = function (data, offset, length, font) {
         if (format == 0)
             offset = readFormat0(data, offset, map);
         else
-            throw "unknown kern table format: " + format;
+            throw Error("unknown kern table format: " + format);
     }
     return map;
 };
@@ -42,7 +42,7 @@ const parseV1 = function (data, offset, length, font) {
         if (format == 0)
             offset = readFormat0(data, offset, map);
         else
-            throw "unknown kern table format: " + format;
+            throw Error("unknown kern table format: " + format);
     }
     return map;
 };

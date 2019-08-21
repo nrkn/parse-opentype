@@ -69,7 +69,7 @@ const parse = function (data, offset, length) {
             console.log("reading unknown MAC encoding " + encodingID + " as ASCII");
         }
         else
-            throw "unknown encoding " + encodingID + ", platformID: " + platformID;
+            throw Error("unknown encoding " + encodingID + ", platformID: " + platformID);
         var tid = "p" + platformID + "," + (languageID).toString(16);
         if (obj[tid] == null)
             obj[tid] = {};

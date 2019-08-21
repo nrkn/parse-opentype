@@ -15,7 +15,7 @@ const parse = function(data, offset, length: number, font)
     var format = coverage>>>8;
     /* I have seen format 128 once, that's why I do */ format &= 0xf;
     if(format==0) offset = readFormat0(data, offset, map);
-    else throw "unknown kern table format: "+format;
+    else throw Error( "unknown kern table format: "+format );
   }
   return map;
 }
@@ -34,7 +34,7 @@ const parseV1 = function(data, offset, length: number, font)
     var format = coverage>>>8;
     /* I have seen format 128 once, that's why I do */ format &= 0xf;
     if(format==0) offset = readFormat0(data, offset, map);
-    else throw "unknown kern table format: "+format;
+    else throw Error( "unknown kern table format: "+format );
   }
   return map;
 }

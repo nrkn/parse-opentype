@@ -45,7 +45,7 @@ const parse = function(data, offset, length)
       obj.tables.push(subt);
     }
 
-    if(obj[id]!=null) throw "multiple tables for one platform+encoding";
+    if(obj[id]!=null) throw Error( "multiple tables for one platform+encoding" );
     obj[id] = tind;
   }
   return obj;

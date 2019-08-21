@@ -14,7 +14,7 @@ const parse = function (data, offset, length) {
     else if (ver == 5)
         version5(data, offset, obj);
     else
-        throw "unknown OS/2 table version: " + ver;
+        throw Error("unknown OS/2 table version: " + ver);
     return obj;
 };
 const version0 = function (data, offset, obj) {

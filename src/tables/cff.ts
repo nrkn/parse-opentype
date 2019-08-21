@@ -216,7 +216,7 @@ const readIndices = (data: Uint8Array, offset: number, indices: number[] ) => {
   if     (offsize==1) for(var i=0; i<count; i++) indices.push( data[offset+i] );
   else if(offsize==2) for(var i=0; i<count; i++) indices.push( readUint16(data, offset+i*2) );
   else if(offsize==3) for(var i=0; i<count; i++) indices.push( readUint32  (data, offset+i*3 - 1) & 0x00ffffff );
-  else if(count!=1) throw "unsupported offset size: " + offsize + ", count: " + count;
+  else if(count!=1) throw Error( "unsupported offset size: " + offsize + ", count: " + count );
 
   offset += count*offsize;
   return offset-1;
@@ -262,7 +262,7 @@ const readDict = function(data, offset, end)
     if(32 <=b0 && b0<=246) { val = b0-139;  vs=1; }
     if(247<=b0 && b0<=250) { val = (b0-247)*256+b1+108;  vs=2; }
     if(251<=b0 && b0<=254) { val =-(b0-251)*256-b1-108;  vs=2; }
-    if(b0==255) {  val = readInt32(data, offset+1)/0xffff;  vs=5;  throw "unknown number";  }
+    if(b0==255) {  val = readInt32(data, offset+1)/0xffff;  vs=5;  throw Error( "unknown number" );  }
 
     if(b0==30)
     {

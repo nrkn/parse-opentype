@@ -57,7 +57,7 @@ const parse = function(data, offset, length)
     else if(encodingID == 3) str = readUnicode(data, soff, slen/2);
 
     else if(platformID == 1) { str = readAscii(data, soff, slen);  console.log("reading unknown MAC encoding "+encodingID+" as ASCII") }
-    else throw "unknown encoding "+encodingID + ", platformID: "+platformID;
+    else throw Error( "unknown encoding "+encodingID + ", platformID: "+platformID );
 
     var tid = "p"+platformID+","+(languageID).toString(16);
     if(obj[tid]==null) obj[tid] = {};
