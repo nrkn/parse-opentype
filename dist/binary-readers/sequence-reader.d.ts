@@ -18,4 +18,5 @@ export interface SequenceReader {
     skip: (bytes: number) => void;
     move: (offset: number) => void;
     currentOffset: () => number;
+    getData: () => Uint8Array;
 }

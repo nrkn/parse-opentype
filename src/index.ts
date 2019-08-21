@@ -99,6 +99,7 @@ const readFont = ( data: Uint8Array, offset: number ) => {
     var t = tags[ i ];
 
     if ( tabs[ t ] ){
+      console.log( 'parsing table', t )
       const table = tables[ t.trim() ].parse( data, tabs[ t ].offset, tabs[ t ].length, fontData )
 
       fontData[ t.trim() ] = table

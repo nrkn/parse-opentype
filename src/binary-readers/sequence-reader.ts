@@ -48,6 +48,7 @@ export const sequenceReader = (
   reader.skip = bytes => { offset += bytes }
   reader.move = newOffset => { offset = newOffset }
   reader.currentOffset = () => offset
+  reader.getData = () => data
 
   return reader as SequenceReader
 }
@@ -72,6 +73,7 @@ export interface SequenceReader {
   skip: ( bytes: number ) => void
   move: ( offset: number ) => void
   currentOffset: () => number
+  getData: () => Uint8Array
 }
 
 interface ArrayReaders {

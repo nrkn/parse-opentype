@@ -33,6 +33,7 @@ exports.sequenceReader = (data, offset) => {
     reader.skip = bytes => { offset += bytes; };
     reader.move = newOffset => { offset = newOffset; };
     reader.currentOffset = () => offset;
+    reader.getData = () => data;
     return reader;
 };
 const fixed = {

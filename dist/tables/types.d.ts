@@ -31,3 +31,7 @@ export interface Hhea {
     metricDataFormat: number;
     numberOfHMetrics: number;
 }
+export interface DataLocation {
+    offset: number;
+    length: number;
+}

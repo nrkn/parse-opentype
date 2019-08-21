@@ -76,6 +76,7 @@ const readFont = (data, offset) => {
     for (var i = 0; i < tags.length; i++) {
         var t = tags[i];
         if (tabs[t]) {
+            console.log('parsing table', t);
             const table = tables_1.tables[t.trim()].parse(data, tabs[t].offset, tabs[t].length, fontData);
             fontData[t.trim()] = table;
             font[t.trim()] = table;

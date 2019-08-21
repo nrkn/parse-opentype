@@ -1,18 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const binary_readers_1 = require("../binary-readers");
+const sequence_reader_1 = require("../binary-readers/sequence-reader");
+const util_1 = require("../util");
 const parse = (data) => {
+    const reader = sequence_reader_1.sequenceReader(data, 0);
     let offset = 0;
     // Name INDEX
-    const nameIndices = [];
-    offset = readIndices(data, offset, nameIndices);
-    const names = [];
-    for (var i = 0; i < nameIndices.length - 1; i++)
-        names.push(binary_readers_1.readAscii(data, offset + nameIndices[i], nameIndices[i + 1] - nameIndices[i]));
-    offset += nameIndices[nameIndices.length - 1];
+    const nameIndices = readIndices(reader);
+    offset = reader.currentOffset();
+    const names = util_1.createSequence(nameIndices.length - 1, i => binary_readers_1.readAscii(data, offset + nameIndices[i], nameIndices[i + 1] - nameIndices[i]));
+    console.log('names', names);
+    reader.skip(nameIndices[nameIndices.length - 1]);
+    offset = reader.currentOffset();
     // Top DICT INDEX
     const topDictIndices = [];
-    offset = readIndices(data, offset, topDictIndices);
+    offset = readIndices2(data, offset, topDictIndices);
     // Top DICT Data
     var topDicts = [];
     for (var i = 0; i < topDictIndices.length - 1; i++)
@@ -21,7 +24,7 @@ const parse = (data) => {
     var topdict = topDicts[0];
     // String INDEX
     var sinds = [];
-    offset = readIndices(data, offset, sinds);
+    offset = readIndices2(data, offset, sinds);
     // String Data
     var strings = [];
     for (var i = 0; i < sinds.length - 1; i++)
@@ -33,7 +36,7 @@ const parse = (data) => {
     if (topdict.CharStrings) {
         offset = topdict.CharStrings;
         var sinds = [];
-        offset = readIndices(data, offset, sinds);
+        offset = readIndices2(data, offset, sinds);
         var cstr = [];
         for (var i = 0; i < sinds.length - 1; i++)
             cstr.push(binary_readers_1.readUint8Array(data, offset + sinds[i], sinds[i + 1] - sinds[i]));
@@ -45,7 +48,7 @@ const parse = (data) => {
     if (topdict.ROS) {
         offset = topdict.FDArray;
         var fdind = [];
-        offset = readIndices(data, offset, fdind);
+        offset = readIndices2(data, offset, fdind);
         topdict.FDArray = [];
         for (var i = 0; i < fdind.length - 1; i++) {
             var dict = readDict(data, offset + fdind[i], offset + fdind[i + 1]);
@@ -91,7 +94,7 @@ const _readFDict = function (data, dict, ss) {
 };
 const readSubrs = function (data, offset, obj) {
     var gsubinds = [];
-    offset = readIndices(data, offset, gsubinds);
+    offset = readIndices2(data, offset, gsubinds);
     var bias, nSubrs = gsubinds.length;
     if (false)
         bias = 0;
@@ -202,7 +205,36 @@ const readCharset = function (data, offset, num) {
     }
     return charset;
 };
-const readIndices = (data, offset, indices) => {
+const readIndices = (reader) => {
+    const { uint16, uint8 } = reader;
+    const indices = [];
+    const count = reader.uint16() + 1;
+    const offsetSize = reader.uint8();
+    if (offsetSize === 1) {
+        for (var i = 0; i < count; i++) {
+            indices.push(uint8());
+        }
+    }
+    else if (offsetSize === 2) {
+        for (var i = 0; i < count; i++) {
+            indices.push(uint16());
+        }
+    }
+    else if (offsetSize === 3) {
+        // special case - 24 bit uint
+        const data = reader.getData();
+        const offset = reader.currentOffset();
+        for (var i = 0; i < count; i++) {
+            indices.push(binary_readers_1.readUint32(data, offset + i * 3 - 1) & 0x00ffffff);
+        }
+        reader.skip(count * offsetSize);
+    }
+    else if (count !== 1) {
+        throw Error(`Unexpected offset size: ${offsetSize}, count: ${count}`);
+    }
+    return indices;
+};
+const readIndices2 = (data, offset, indices) => {
     //const indices: number[] = []
     var count = binary_readers_1.readUint16(data, offset) + 1;
     offset += 2;
